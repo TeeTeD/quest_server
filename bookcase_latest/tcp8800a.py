@@ -1,4 +1,4 @@
-import asyncio
+укмиегпршнжуогфшщ.вкаилтгошжвапркыем ышуктголжвапем import asyncio
 from datetime import datetime, timedelta
 
 devices = {}
