@@ -7,13 +7,13 @@
 #include <esp_system.h>
 
 // Настройки Wi-Fi
-const char* ssid = "Keenetic";
-const char* password = "9250665348";
+const char* ssid = "MGTS_GPON_BF72";
+const char* password = "Vdeg0047";
 
 unsigned long heartbeat_bpm = 1000;  //millis
 
 // Настройки сервера
-const char* serverIP = "192.168.1.62";  // Замените на IP вашего сервера
+const char* serverIP = "192.168.1.4";  // Замените на IP вашего сервера
 const int serverPort = 8800;           // Замените на порт вашего сервера
 
 // Объект асинхронного TCP-клиента
@@ -88,7 +88,7 @@ void setup() {
   Serial.begin(115200);
   delay(10000);
 
-  //eepromTestDeviceType();
+  eepromTestDeviceType();
 
   device_type = getEepromDeviceType();
 

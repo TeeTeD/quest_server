@@ -1,6 +1,3 @@
-sdiopfvhbasdkjnva;sojvasdkjfvbas;jvb
-
-
 import asyncio
 from datetime import datetime, timedelta
 
