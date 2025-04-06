@@ -105,8 +105,13 @@ void LC02proc(std::string data){
 }
 
 void LC12proc(std::string data){
-  for (int i = 0; i < data.size(); i++){
-    data[i] -= '0';
+  for (char &c : data) {
+    c -= '0';
+  }
+
+  if(data.size() < 19) {
+    Serial.println("Ошибка: некорректная длина строки данных");
+    return;
   }
 
   uint8_t strip_number = data[0];
@@ -116,37 +121,50 @@ void LC12proc(std::string data){
   uint8_t blue = (data[11] * 100) + (data[12] * 10) + data[13];
   uint32_t time = (data[14] * 10000) + (data[15] * 1000) + (data[16] * 100) + (data[17] * 10) + data[18];
 
-  uint32_t delay_time = 0;
-  if (time >= LEDS_SMOOTH_TIMING_GRADE){
-    delay_time = time / LEDS_SMOOTH_TIMING_GRADE;
-  }
+  uint32_t delay_time = time >= LEDS_SMOOTH_TIMING_GRADE ? time / LEDS_SMOOTH_TIMING_GRADE : 0;
 
-  uint32_t _current_color = leds[strip_number].getPixelColor(pixel_number);
+  LedCommand cmd = {
+    .strip = strip_number,
+    .pixel = pixel_number,
+    .color_red = red,
+    .color_green = green,
+    .color_blue = blue,
+    .duration = delay_time
+  };
 
-  uint8_t _current_red = (_current_color >> 16) & 0xFF;
-  uint8_t _current_green = (_current_color >> 8) & 0xFF;
-  uint8_t _current_blue = _current_color & 0xFF;
+  xQueueSend(led_queue, &cmd, 100 / portTICK_PERIOD_MS);
+}
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  for (uint8_t i = 1; i < LEDS_SMOOTH_TIMING_GRADE + 1; i++){
-    uint8_t _red = map_uint8(i, 0, LEDS_SMOOTH_TIMING_GRADE, _current_red, red);
-    uint8_t _green = map_uint8(i, 0, LEDS_SMOOTH_TIMING_GRADE, _current_green, green);
-    uint8_t _blue = map_uint8(i, 0, LEDS_SMOOTH_TIMING_GRADE, _current_blue, blue);
+void ledProcessorTask(void *pvParameters) {
+  LedCommand cmd;
+  
+  while(true) {
+    if(xQueueReceive(led_queue, &cmd, portMAX_DELAY)) {
+      uint32_t current_color = leds[cmd.strip].getPixelColor(cmd.pixel);
 
-    leds[strip_number].setPixelColor(pixel_number, _red, _green, _blue);
-    leds[strip_number].show();
-    delay(delay_time);
+      uint8_t current_r = (current_color >> 16) & 0xFF;
+      uint8_t current_g = (current_color >> 8) & 0xFF;
+      uint8_t current_b = current_color & 0xFF;
+      
+      for(uint8_t i = 1; i <= LEDS_SMOOTH_TIMING_GRADE; i++) {
+        uint8_t r = map_uint8(i, 0, LEDS_SMOOTH_TIMING_GRADE, current_r, cmd.color_red);
+        uint8_t g = map_uint8(i, 0, LEDS_SMOOTH_TIMING_GRADE, current_g, cmd.color_green);
+        uint8_t b = map_uint8(i, 0, LEDS_SMOOTH_TIMING_GRADE, current_b, cmd.color_blue);
+        
+        leds[cmd.strip].setPixelColor(cmd.pixel, r, g, b);
+        need_to_update_leds[cmd.strip] = true;
+        
+        vTaskDelay(cmd.duration / portTICK_PERIOD_MS);
+      }
+      Serial.println("[Task] Done!");
+    }
   }
 }
 
 uint8_t map_uint8(uint8_t x, uint8_t in_min, uint8_t in_max, uint8_t out_min, uint8_t out_max) {
     return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
 }
-
-
-
-
-
-
 
 
 

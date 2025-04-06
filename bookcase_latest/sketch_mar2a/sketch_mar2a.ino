@@ -5,23 +5,34 @@
 #include <EEPROM.h>
 #include <Adafruit_NeoPixel.h>
 #include <esp_system.h>
+#include <queue>
+
+
+struct LedCommand {
+  uint8_t strip;
+  uint16_t pixel;
+  uint8_t color_red;
+  uint8_t color_green;
+  uint8_t color_blue;
+  uint32_t duration;
+};
+
+QueueHandle_t led_queue = xQueueCreate(50, sizeof(LedCommand));
 
 // Настройки Wi-Fi
-const char* ssid = "MGTS_GPON_BF72";
-const char* password = "Vdeg0047";
+const char* ssid = "Keenetic";
+const char* password = "9250665348";
 
 unsigned long heartbeat_bpm = 1000;  //millis
 
 // Настройки сервера
-const char* serverIP = "192.168.1.4";  // Замените на IP вашего сервера
+const char* serverIP = "192.168.1.62";  // Замените на IP вашего сервера
 const int serverPort = 8800;           // Замените на порт вашего сервера
 
 // Объект асинхронного TCP-клиента
 AsyncClient client;
 
 std::string tcp_data_buffer;
-
-
 
 //////////////////////////////////////////////////  device data //////////////////////////////////////////////////
 uint32_t device_type = 0;
@@ -44,7 +55,12 @@ struct PinStateInterrupt {
 std::vector<PinState> pins_to_check_interrupt;
 std::vector<PinStateInterrupt> interruptPins;
 
-Adafruit_NeoPixel leds[10];
+const uint16_t leds_amount = 10;
+
+Adafruit_NeoPixel leds[leds_amount];
+bool need_to_update_leds[leds_amount];
+uint64_t leds_update_timer = 0;
+uint16_t leds_update_bpm = 10;
 
 uint32_t RED = leds[0].Color(255, 0, 0);
 uint32_t GREEN = leds[0].Color(0, 255, 0);
@@ -88,7 +104,7 @@ void setup() {
   Serial.begin(115200);
   delay(10000);
 
-  eepromTestDeviceType();
+  //eepromTestDeviceType();
 
   device_type = getEepromDeviceType();
 
@@ -133,6 +149,15 @@ void setup() {
   if (!client.connect(serverIP, serverPort)) {
     Serial.println("Failed to connect to server");
   }
+
+  xTaskCreate(
+    ledProcessorTask,
+    "LED Processor",
+    4096,
+    NULL,
+    2,
+    NULL
+  );
 }
 
 void onDataCallback(void* arg, AsyncClient* client, void* data, size_t len) {
@@ -193,6 +218,18 @@ void parseData(std::string _mess) {
 }
 
 void loop() {
+  if ((millis() - leds_update_timer) >= leds_update_bpm){
+    for(int i = 0; i < leds_amount; i++){
+      if (need_to_update_leds[i]){
+        leds[i].show();
+        need_to_update_leds[i] = false;
+      }
+    }
+
+    leds_update_timer = millis();
+  }
+
+
   if ((millis() - heartbeat_timer) >= heartbeat_bpm) {
     client.write("heartbeat;");
     heartbeat_timer = millis();

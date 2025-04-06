@@ -139,15 +139,13 @@ async def bookcase_handler():
 
                     if "GETD220" in packet:
                         book_1_press = True
-                        if not book_2_flag and not book_3_flag and not already_wrong:
+                        if (not book_2_flag and not book_3_flag) or not already_wrong:
                             book_1_flag = True
-                            writer.write("LC02000640002550000;".encode('utf-8'))
-                            writer.write("LC010;".encode('utf-8'))
+                            writer.write("LC120006400025500001000;".encode('utf-8'))
                             await writer.drain()
                         else:
                             already_wrong = True
-                            writer.write("LC02000642550000000;".encode('utf-8'))
-                            writer.write("LC010;".encode('utf-8'))
+                            writer.write("LC120006425500000001000;".encode('utf-8'))
                             await writer.drain()
 
                     
@@ -155,13 +153,11 @@ async def bookcase_handler():
                         book_2_press = True
                         if book_1_flag and not book_3_flag and not already_wrong:
                             book_2_flag = True
-                            writer.write("LC02000440002550000;".encode('utf-8'))
-                            writer.write("LC010;".encode('utf-8'))
+                            writer.write("LC120004400025500001000;".encode('utf-8'))
                             await writer.drain()
                         else:
                             already_wrong = True
-                            writer.write("LC02000442550000000;".encode('utf-8'))
-                            writer.write("LC010;".encode('utf-8'))
+                            writer.write("LC120004425500000001000;".encode('utf-8'))
                             await writer.drain()
 
 
@@ -169,35 +165,31 @@ async def bookcase_handler():
                         book_3_press = True
                         if book_1_flag and book_2_flag and not already_wrong:
                             book_3_flag = True
-                            writer.write("LC02000130002550000;".encode('utf-8'))
-                            writer.write("LC010;".encode('utf-8'))
+                            writer.write("LC120001300025500001000;".encode('utf-8'))
+                            writer.write("SETD331;".encode('utf-8'))
                             await writer.drain()
                         else:
                             already_wrong = True
-                            writer.write("LC02000132550000000;".encode('utf-8'))
-                            writer.write("LC010;".encode('utf-8'))
+                            writer.write("LC120001325500000001000;".encode('utf-8'))
                             await writer.drain()
                         
 
                     if "GETD221" in packet:
                         book_1_press = False
                         book_1_flag = False
-                        writer.write("LC02000640000000000;".encode('utf-8'))
-                        writer.write("LC010;".encode('utf-8'))
+                        writer.write("LC120006400000000001000;".encode('utf-8'))
                         await writer.drain()
 
                     if "GETD231" in packet:
                         book_2_press = False
                         book_2_flag = False
-                        writer.write("LC02000440000000000;".encode('utf-8'))
-                        writer.write("LC010;".encode('utf-8'))
+                        writer.write("LC120004400000000001000;".encode('utf-8'))
                         await writer.drain()
 
                     if "GETD271" in packet:
                         book_3_press = False
                         book_3_flag = False
-                        writer.write("LC02000130000000000;".encode('utf-8'))
-                        writer.write("LC010;".encode('utf-8'))
+                        writer.write("LC120001300000000001000;".encode('utf-8'))
                         await writer.drain()
                         
                     if not book_1_press and not book_2_press and not book_3_press:
@@ -231,3 +223,7 @@ async def start_server(host='0.0.0.0', port=8800):
 
 if __name__ == "__main__":
     asyncio.run(start_server())
+
+
+def SETD(pin, state):
+    return f"SETD{имя}{возраст} лет."
