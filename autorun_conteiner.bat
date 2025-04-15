@@ -30,4 +30,4 @@ docker build -t clean_ubuntu:v1 .
 
 echo Starting conteiner...
 
-docker run --rm my_image ls -la /usr/local/bin/
+docker run --rm clean_ubuntu:v1 ls -la /usr/local/bin/
