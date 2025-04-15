@@ -8,4 +8,4 @@ check_internet() {
     fi
 }
 
-exec python3 tcp8800a.py  
+exec python3 /usr/local/bin/tcp8800a.py  
