@@ -22,4 +22,10 @@ REM BFCPEWTITLE=Window Title
 REM BFCPEOPTIONEND
 @echo off
 
-echo я батник я батник
+echo Building actual conteiner...
+
+docker build -t clean_ubuntu:v1 .
+
+echo Starting conteiner...
+
+docker run -p 8800:8800 clean_ubuntu:1
