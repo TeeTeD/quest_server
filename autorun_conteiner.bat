@@ -22,6 +22,8 @@ REM BFCPEWTITLE=Window Title
 REM BFCPEOPTIONEND
 @echo off
 
+cd bookcase_latest
+
 echo Building actual conteiner...
 
 docker build -t clean_ubuntu:v1 .
