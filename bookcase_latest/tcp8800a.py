@@ -206,7 +206,7 @@ async def bookcase_handler():
                         book_1_press = True
                         if not book_2_flag and not book_3_flag and not already_wrong:
                             book_1_flag = True
-                            writer.write(LC13(0, 60, 6, 0, 255, 0, 500).encode('utf-8'))
+                            writer.write(LC13(0, 60, 6, 0, 127, 0, 500).encode('utf-8'))
                             await writer.drain()
                         else:
                             already_wrong = True
@@ -218,7 +218,7 @@ async def bookcase_handler():
                         book_2_press = True
                         if book_1_flag and not book_3_flag and not already_wrong:
                             book_2_flag = True
-                            writer.write(LC13(0, 41, 6, 0, 255, 0, 500).encode('utf-8'))
+                            writer.write(LC13(0, 41, 6, 0, 127, 0, 500).encode('utf-8'))
                             await writer.drain()
                         else:
                             already_wrong = True
