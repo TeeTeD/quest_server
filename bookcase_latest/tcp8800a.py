@@ -201,27 +201,27 @@ async def bookcase_handler():
 
                 try:#64, 44, 13
 
-                    if "GETD220" in packet:
+                    if "GETD221" in packet:
                         book_1_press = True
                         if not book_2_flag and not book_3_flag and not already_wrong:
                             book_1_flag = True
-                            writer.write(LC13(0, 0, 5, 0, 255, 0, 200).encode('utf-8'))
+                            writer.write(LC13(0, 61, 5, 0, 255, 0, 200).encode('utf-8'))
                             await writer.drain()
                         else:
                             already_wrong = True
-                            writer.write(LC13(0, 0, 5, 255, 0, 0, 200).encode('utf-8'))
+                            writer.write(LC13(0, 61, 5, 255, 0, 0, 200).encode('utf-8'))
                             await writer.drain()
 
                     
-                    if "GETD230" in packet:
+                    if "GETD231" in packet:
                         book_2_press = True
                         if book_1_flag and not book_3_flag and not already_wrong:
                             book_2_flag = True
-                            writer.write(LC13(0, 13, 5, 0, 255, 0, 200).encode('utf-8'))
+                            writer.write(LC13(0, 41, 5, 0, 255, 0, 200).encode('utf-8'))
                             await writer.drain()
                         else:
                             already_wrong = True
-                            writer.write(LC13(0, 13, 5, 255, 0, 0, 200).encode('utf-8'))
+                            writer.write(LC13(0, 41, 5, 255, 0, 0, 200).encode('utf-8'))
                             await writer.drain()
 
 
@@ -229,36 +229,36 @@ async def bookcase_handler():
                         book_3_press = True
                         if book_1_flag and book_2_flag and not already_wrong:
                             book_3_flag = True
-                            writer.write(LC13(0, 27, 5, 0, 255, 0, 200).encode('utf-8'))
-                            writer.write(SETD(2, True).encode('utf-8'))
+                            writer.write(LC13(0, 10, 5, 0, 255, 0, 200).encode('utf-8'))
+                            writer.write(SETD(33, True).encode('utf-8'))
                             await writer.drain()
                         else:
                             already_wrong = True
-                            writer.write(LC13(0, 27, 5, 255, 0, 0, 200).encode('utf-8'))
+                            writer.write(LC13(0, 10, 5, 255, 0, 0, 200).encode('utf-8'))
                             await writer.drain()
                         
 
-                    if "GETD221" in packet:
+                    if "GETD220" in packet:
                         book_1_press = False
                         book_1_flag = False
-                        writer.write(LC13(0, 0, 5, 0, 0, 0, 200).encode('utf-8'))
+                        writer.write(LC13(0, 61, 5, 0, 0, 0, 200).encode('utf-8'))
                         await writer.drain()
 
-                    if "GETD231" in packet:
+                    if "GETD230" in packet:
                         book_2_press = False
                         book_2_flag = False
-                        writer.write(LC13(0, 13, 5, 0, 0, 0, 200).encode('utf-8'))
+                        writer.write(LC13(0, 41, 5, 0, 0, 0, 200).encode('utf-8'))
                         await writer.drain()
 
                     if "GETD270" in packet:
                         book_3_press = False
                         book_3_flag = False
-                        writer.write(LC13(0, 27, 5, 0, 0, 0, 200).encode('utf-8'))
+                        writer.write(LC13(0, 10, 5, 0, 0, 0, 200).encode('utf-8'))
                         await writer.drain()
                         
                     if not book_1_press and not book_2_press and not book_3_press:
                         already_wrong = False
-                        writer.write(SETD(2, False).encode('utf-8'))
+                        writer.write(SETD(33, False).encode('utf-8'))
 
                             
                 except ConnectionResetError:
