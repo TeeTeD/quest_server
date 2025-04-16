@@ -260,6 +260,8 @@ async def bookcase_handler():
                         
                     if not book_1_press and not book_2_press and not book_3_press:
                         already_wrong = False
+                        writer.write(LC03(0, 0, 74, 0, 0, 0).encode('utf-8'))
+                        writer.write(LC01(0).encode('utf-8'))
                         writer.write(SETD(4, False).encode('utf-8'))
 
                             
