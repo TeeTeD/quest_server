@@ -10,7 +10,7 @@ SLAVE_BOOKCASE_CONF = {
     "CONF221;",
     "CONF231;",
     "CONF271;",
-    "CONF332;",
+    "CONF042;",
     "LC001700742550;"
 }
 
@@ -230,7 +230,7 @@ async def bookcase_handler():
                         if book_1_flag and book_2_flag and not already_wrong:
                             book_3_flag = True
                             writer.write(LC13(0, 7, 10, 0, 255, 0, 200).encode('utf-8'))
-                            writer.write(SETD(33, True).encode('utf-8'))
+                            writer.write(SETD(4, True).encode('utf-8'))
                             await writer.drain()
                         else:
                             already_wrong = True
@@ -258,7 +258,7 @@ async def bookcase_handler():
                         
                     if not book_1_press and not book_2_press and not book_3_press:
                         already_wrong = False
-                        writer.write(SETD(33, False).encode('utf-8'))
+                        writer.write(SETD(4, False).encode('utf-8'))
 
                             
                 except ConnectionResetError:
