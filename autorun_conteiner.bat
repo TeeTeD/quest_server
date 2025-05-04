@@ -26,4 +26,4 @@ cd bookcase_latest
 
 echo Starting conteiner...
 
-docker run -v C:\server_stuff:/usr/local/bin/ -e PYTHONUNBUFFERED=1 -p 8800:8800 clean_ubuntu:v1
+docker run -v C:\server_stuff:/usr/local/bin/ -w /usr/local/bin/ -it python:3.13.3 python tcp8800a.py -e PYTHONUNBUFFERED=1 -p 8800:8800 clean_ubuntu:v1
