@@ -8,11 +8,11 @@ packet_queue = asyncio.Queue()
 HEARTBEAT_TIMEOUT = timedelta(seconds=10)
 
 SLAVE_BOOKCASE_CONF = {
-    "CONF221;",
-    "CONF231;",
-    "CONF271;",
-    "CONF042;",
-    "LC001700742550;"
+    "CONF041;",
+    "CONF051;",
+    "CONF321;",
+    "CONF262;",
+    "LC000200742550;"
 }
 
 SLAVE_TEST_CONF = {
@@ -24,7 +24,7 @@ SLAVE_TEST_CONF = {
 }
 
 SLAVE_CONF_LIST = {
-    "abcd": SLAVE_BOOKCASE_CONF,
+    "boca": SLAVE_BOOKCASE_CONF,
     "efgh": SLAVE_TEST_CONF
 }
 
