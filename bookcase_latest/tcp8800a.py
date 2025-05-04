@@ -202,7 +202,7 @@ async def bookcase_handler():
 
                 try:#64, 44, 13
 
-                    if "GETD221" in packet:
+                    if "GETD041" in packet:
                         book_1_press = True
                         if not book_2_flag and not book_3_flag and not already_wrong:
                             book_1_flag = True
@@ -214,7 +214,7 @@ async def bookcase_handler():
                             await writer.drain()
 
                     
-                    if "GETD231" in packet:
+                    if "GETD051" in packet:
                         book_2_press = True
                         if book_1_flag and not book_3_flag and not already_wrong:
                             book_2_flag = True
@@ -226,13 +226,13 @@ async def bookcase_handler():
                             await writer.drain()
 
 
-                    if "GETD271" in packet:
+                    if "GETD321" in packet:
                         book_3_press = True
                         if book_1_flag and book_2_flag and not already_wrong:
                             book_3_flag = True
                             writer.write(LC13(0, 0, 74, 0, 255, 0, 5000).encode('utf-8'))
                             time.sleep(5)
-                            writer.write(SETD(4, True).encode('utf-8'))
+                            writer.write(SETD(26, True).encode('utf-8'))
                             await writer.drain()
                         else:
                             already_wrong = True
@@ -240,19 +240,19 @@ async def bookcase_handler():
                             await writer.drain()
                         
 
-                    if "GETD220" in packet:
+                    if "GETD040" in packet:
                         book_1_press = False
                         book_1_flag = False
                         writer.write(LC13(0, 60, 6, 0, 0, 0, 500).encode('utf-8'))
                         await writer.drain()
 
-                    if "GETD230" in packet:
+                    if "GETD050" in packet:
                         book_2_press = False
                         book_2_flag = False
                         writer.write(LC13(0, 41, 6, 0, 0, 0, 500).encode('utf-8'))
                         await writer.drain()
 
-                    if "GETD270" in packet:
+                    if "GETD320" in packet:
                         book_3_press = False
                         book_3_flag = False
                         writer.write(LC13(0, 9, 6, 0, 0, 0, 500).encode('utf-8'))
@@ -262,7 +262,7 @@ async def bookcase_handler():
                         already_wrong = False
                         writer.write(LC03(0, 0, 74, 0, 0, 0).encode('utf-8'))
                         writer.write(LC01(0).encode('utf-8'))
-                        writer.write(SETD(4, False).encode('utf-8'))
+                        writer.write(SETD(26, False).encode('utf-8'))
 
                             
                 except ConnectionResetError:
