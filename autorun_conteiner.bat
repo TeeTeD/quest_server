@@ -23,7 +23,7 @@ REM BFCPEOPTIONEND
 @echo off
 
 cd bookcase_latest
+python3 tcp8800a.py
 
-echo Starting conteiner...
-
-docker run -v C:\server_stuff:/usr/local/bin/ -e PYTHONUNBUFFERED=1 -p 8800:8800 clean_ubuntu:v1
+#echo Starting conteiner...
+#docker run -v C:\server_stuff:/usr/local/bin/ -e PYTHONUNBUFFERED=1 -p 8800:8800 clean_ubuntu:v1
