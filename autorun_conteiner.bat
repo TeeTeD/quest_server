@@ -26,4 +26,4 @@ cd bookcase_latest
 
 echo Starting conteiner...
 
-docker run -p 8800:8800 clean_ubuntu:v1
+docker run -e PYTHONUNBUFFERED=1 -p 8800:8800 clean_ubuntu:v1
