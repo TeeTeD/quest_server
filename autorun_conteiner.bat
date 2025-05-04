@@ -26,4 +26,4 @@ cd bookcase_latest
 
 echo Starting conteiner...
 
-docker run -v C:\server_stuff:/usr/local/bin/ -e PYTHONUNBUFFERED=1 -p 8800:8800 clean_ubuntu:v1
+docker run -v C:\server_stuff:/usr/local/bin/ -e PYTHONUNBUFFERED=1 -p 8800:8800 clean_ubuntu:v1 /usr/local/bin/bookcase_latest/entrypoint.sh
